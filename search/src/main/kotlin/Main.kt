@@ -2,18 +2,19 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardOpenOption
 
-fun main() {
+fun main(args: Array<String>) {
+    val instrument = (args.isNotEmpty() && (args[0] == "-i" || args[0] == "--instrument"))
     val maze = Maze.random()
-    //println(maze)
 
-    printResults("dfs", maze, GenericSearch.dfs(maze.start, maze::goalTest, maze::successors))
-    printResults("bfs", maze, GenericSearch.bfs(maze.start, maze::goalTest, maze::successors))
-    printResults("astar", maze, GenericSearch.astar(maze.start, maze::goalTest, maze::successors, maze::manhattanDistance))
-    /**
-    //printResultsInstrumented("dfs", maze, GenericSearchInstrumented.dfs(maze.start, maze::goalTest, maze::successors))
-    //printResultsInstrumented("bfs", maze, GenericSearchInstrumented.bfs(maze.start, maze::goalTest, maze::successors))
-    //printResultsInstrumented("astar", maze, GenericSearchInstrumented.astar(maze.start, maze::goalTest, maze::successors, maze::manhattanDistance))
-     */
+    if (instrument) {
+        printResultsInstrumented("dfs", maze, GenericSearchInstrumented.dfs(maze.start, maze::goalTest, maze::successors))
+        printResultsInstrumented("bfs", maze, GenericSearchInstrumented.bfs(maze.start, maze::goalTest, maze::successors))
+        printResultsInstrumented("astar", maze, GenericSearchInstrumented.astar(maze.start, maze::goalTest, maze::successors, maze::manhattanDistance))
+    } else {
+        printResults("dfs", maze, GenericSearch.dfs(maze.start, maze::goalTest, maze::successors))
+        printResults("bfs", maze, GenericSearch.bfs(maze.start, maze::goalTest, maze::successors))
+        printResults("astar", maze, GenericSearch.astar(maze.start, maze::goalTest, maze::successors, maze::manhattanDistance))
+    }
 }
 
 fun printResults(algo: String, maze: Maze, solution: Node<MazeLoc>?) {
